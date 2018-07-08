@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,7 +12,8 @@ class App extends React.Component {
       user: null,
       username: '',
       password: '',
-      error: null,
+      notification: null,
+      notificationType: null,
       title: '',
       author: '',
       url: ''
@@ -44,15 +46,16 @@ class App extends React.Component {
       this.setState({ username: '', password: '', user})
     } catch(exception) {
       this.setState({
-        error: 'käyttäjätunnus tai salasana virheellinen',
+        notification: 'käyttäjätunnus tai salasana virheellinen',
+        notificationType : 'error'
       })
       setTimeout(() => {
-        this.setState({ error: null })
+        this.setState({ notification: null,notificationType: null })
       }, 5000)
     }
   }
 
-  addBlog = (event) => {
+  addBlog = async (event) => {
     event.preventDefault()
     const blogObject = {
       title: this.state.title,
@@ -60,7 +63,31 @@ class App extends React.Component {
       url: this.state.url
     }
 
-    blogService
+    try {
+      const blogCreated = await blogService.create(blogObject)
+      this.setState({
+        blogs: this.state.blogs.concat(blogCreated),
+        title: '',
+        author: '',
+        url: '',
+        notification: `New blog ${blogCreated.title} by ${blogCreated.author} added`,
+        notificationType : 'success'
+      })
+      setTimeout(() => {
+        this.setState({ notification: null,notificationType: null})
+      }, 5000)
+
+    } catch(exception) {
+      this.setState({
+        notification: 'puutteelliset tiedot',
+        notificationType : 'error'
+      })
+      setTimeout(() => {
+        this.setState({ notification: null,notificationType: null})
+      }, 5000)
+    }
+
+    /**blogService
       .create(blogObject)
       .then(blogObject => {
         this.setState({
@@ -69,7 +96,7 @@ class App extends React.Component {
           author: '',
           url: ''
         })
-      })
+      })**/
   }
 
   logOut = () => {
@@ -154,6 +181,7 @@ class App extends React.Component {
 
     return (
       <div>
+        <Notification message={this.state.notification} type={this.state.notificationType} />
         {this.state.user === null ?
           loginForm() :
         <div>
