@@ -11,7 +11,10 @@ class App extends React.Component {
       user: null,
       username: '',
       password: '',
-      error: null
+      error: null,
+      title: '',
+      author: '',
+      url: ''
     }
   }
 
@@ -24,7 +27,7 @@ class App extends React.Component {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
-      //noteService.setToken(user.token)
+      blogService.setToken(user.token)
     } 
   }
 
@@ -49,6 +52,26 @@ class App extends React.Component {
     }
   }
 
+  addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: this.state.title,
+      author: this.state.author,
+      url: this.state.url
+    }
+
+    blogService
+      .create(blogObject)
+      .then(blogObject => {
+        this.setState({
+          blogs: this.state.blogs.concat(blogObject),
+          title: '',
+          author: '',
+          url: ''
+        })
+      })
+  }
+
   logOut = () => {
     window.localStorage.removeItem('loggedBlogUser')
     this.setState({user : null})
@@ -58,15 +81,19 @@ class App extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  handleBlogFieldChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+
   render() {
 
     const loginForm = () => (
       <div>
-        <h2>Kirjaudu</h2>
+        <h2>Log in</h2>
 
         <form onSubmit={this.login}>
           <div>
-            käyttäjätunnus
+            username
             <input
               type="text"
               name="username"
@@ -75,7 +102,7 @@ class App extends React.Component {
             />
           </div>
           <div>
-            salasana
+            password
             <input
               type="password"
               name="password"
@@ -88,6 +115,42 @@ class App extends React.Component {
       </div>
     )
 
+    const blogForm = () => (
+      <div>
+        <h2>Create new blog listing</h2>
+        <form onSubmit={this.addBlog}>
+          <div>
+            title
+            <input
+              type="text"
+              name="title"
+              value={this.state.title}
+              onChange={this.handleBlogFieldChange}
+            />
+          </div>
+          <div>
+            author
+            <input
+              type="text"
+              name="author"
+              value={this.state.author}
+              onChange={this.handleBlogFieldChange}
+            />
+          </div>
+          <div>
+            url
+            <input
+              type="text"
+              name="url"
+              value={this.state.url}
+              onChange={this.handleBlogFieldChange}
+            />
+          </div>
+          <button>create</button> 
+        </form>
+      </div>
+    )
+
 
     return (
       <div>
@@ -96,6 +159,7 @@ class App extends React.Component {
         <div>
           <p>{this.state.user.name} logged in</p>
           <button onClick={this.logOut}>logout</button>
+          {blogForm()}
         <div>
           <h2>blogs</h2>
             {this.state.blogs.map(blog =>
