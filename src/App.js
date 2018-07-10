@@ -100,16 +100,25 @@ class App extends React.Component {
       blogService
         .update(id, changedBlog)
         .then(changedBlog => {
+          const copiedBlogs = this.state.blogs.map(blog => blog.id !== id ? blog : changedBlog)
+          const sortedBlogs = this.sortedByLikes(copiedBlogs)
           this.setState({
-            blogs: this.state.blogs.map(blog => blog.id !== id ? blog : changedBlog)
+            blogs: sortedBlogs
           })
         })
         .catch(error => {
-          
         })
     }
   }
 
+  compareLikes = (a, b) => {
+    return a.likes - b.likes
+  }
+
+  sortedByLikes = (blogs) => {
+    const blogsToSort = [... blogs]
+    return blogsToSort.sort(this.compareLikes)
+  }
 
   logOut = () => {
     window.localStorage.removeItem('loggedBlogUser')
@@ -167,7 +176,7 @@ class App extends React.Component {
       </Togglable>
     )
 
-
+    
     return (
       <div>
         <Notification message={this.state.notification} type={this.state.notificationType} />
