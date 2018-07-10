@@ -23,10 +23,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
-    ).then( () => {
-      const sortedBlogs = this.sortedByLikes(this.state.blogs)
+    blogService.getAll().then(blogs => {
+      const sortedBlogs = this.sortedByLikes(blogs)
       this.setState({blogs: sortedBlogs})
     })
 
