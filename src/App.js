@@ -1,6 +1,8 @@
 import React from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -143,39 +145,15 @@ class App extends React.Component {
     )
 
     const blogForm = () => (
-      <div>
-        <h2>Create new blog listing</h2>
-        <form onSubmit={this.addBlog}>
-          <div>
-            title
-            <input
-              type="text"
-              name="title"
-              value={this.state.title}
-              onChange={this.handleBlogFieldChange}
-            />
-          </div>
-          <div>
-            author
-            <input
-              type="text"
-              name="author"
-              value={this.state.author}
-              onChange={this.handleBlogFieldChange}
-            />
-          </div>
-          <div>
-            url
-            <input
-              type="text"
-              name="url"
-              value={this.state.url}
-              onChange={this.handleBlogFieldChange}
-            />
-          </div>
-          <button>create</button> 
-        </form>
-      </div>
+      <Togglable buttonLabel="Add blog">
+        <BlogForm
+          handleSubmit={this.addBlog}
+          handleChange={this.handleBlogFieldChange}
+          title={this.state.title}
+          author={this.state.author}
+          url={this.state.url}
+        />
+      </Togglable>
     )
 
 
