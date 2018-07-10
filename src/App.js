@@ -25,7 +25,10 @@ class App extends React.Component {
   componentDidMount() {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
-    )
+    ).then( () => {
+      const sortedBlogs = this.sortedByLikes(this.state.blogs)
+      this.setState({blogs: sortedBlogs})
+    })
 
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
