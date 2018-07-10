@@ -37,7 +37,7 @@ class Blog extends React.Component {
           </div>
           <div>
             likes {this.props.blog.likes}
-            <button>like</button>
+            <button onClick={this.props.addLike}>like</button>
           </div>
           <div>
             added by {this.props.blog.user.username}

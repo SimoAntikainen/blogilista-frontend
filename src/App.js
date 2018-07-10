@@ -89,18 +89,27 @@ class App extends React.Component {
         this.setState({ notification: null,notificationType: null})
       }, 5000)
     }
-
-    /**blogService
-      .create(blogObject)
-      .then(blogObject => {
-        this.setState({
-          blogs: this.state.blogs.concat(blogObject),
-          title: '',
-          author: '',
-          url: ''
-        })
-      })**/
   }
+
+  addLikesTo = (id) => {
+    return () => {
+      const blog = this.state.blogs.find(n => n.id === id)
+      const likesPlus = blog.likes + 1
+      const changedBlog = { ...blog, likes: likesPlus}
+
+      blogService
+        .update(id, changedBlog)
+        .then(changedBlog => {
+          this.setState({
+            blogs: this.state.blogs.map(blog => blog.id !== id ? blog : changedBlog)
+          })
+        })
+        .catch(error => {
+          
+        })
+    }
+  }
+
 
   logOut = () => {
     window.localStorage.removeItem('loggedBlogUser')
@@ -153,6 +162,7 @@ class App extends React.Component {
           title={this.state.title}
           author={this.state.author}
           url={this.state.url}
+          addLikes={this.addLike}
         />
       </Togglable>
     )
@@ -170,7 +180,7 @@ class App extends React.Component {
         <div>
           <h2>blogs</h2>
             {this.state.blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} addLike={this.addLikesTo(blog.id)} />
             )}
         </div>
         </div>
