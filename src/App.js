@@ -22,11 +22,25 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    blogService.getAll().then(blogs => {
+  async componentDidMount() {
+    try {
+      const blogs = await blogService.getAll()
       const sortedBlogs = this.sortedByLikes(blogs)
       this.setState({blogs: sortedBlogs})
-    })
+    } catch(exception) {
+      this.setState({
+        notification: 'could not retrieve blogs',
+        notificationType : 'error'
+      })
+      setTimeout(() => {
+        this.setState({ notification: null,notificationType: null})
+      }, 5000)
+    }
+
+    /**blogService.getAll().then(blogs => {
+      const sortedBlogs = this.sortedByLikes(blogs)
+      this.setState({blogs: sortedBlogs})
+    })**/
 
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
@@ -49,7 +63,7 @@ class App extends React.Component {
       this.setState({ username: '', password: '', user})
     } catch(exception) {
       this.setState({
-        notification: 'käyttäjätunnus tai salasana virheellinen',
+        notification: 'username or password is wrong',
         notificationType : 'error'
       })
       setTimeout(() => {
@@ -83,7 +97,7 @@ class App extends React.Component {
 
     } catch(exception) {
       this.setState({
-        notification: 'puutteelliset tiedot',
+        notification: 'insufficient information',
         notificationType : 'error'
       })
       setTimeout(() => {
@@ -92,13 +106,30 @@ class App extends React.Component {
     }
   }
 
-  addLikesTo = (id) => {
-    return () => {
+  addLikesTo = async (id) => {
+    
       const blog = this.state.blogs.find(n => n.id === id)
       const likesPlus = blog.likes + 1
-      const changedBlog = { ...blog, likes: likesPlus}
+      const blogToChange = { ...blog, likes: likesPlus}
 
-      blogService
+      try {
+        const changedBlog = await blogService.update(id, blogToChange)
+        const copiedBlogs = this.state.blogs.map(blog => blog.id !== id ? blog : changedBlog)
+        const sortedBlogs = this.sortedByLikes(copiedBlogs)
+        this.setState({
+          blogs: sortedBlogs
+        })
+      } catch(exception) {
+        this.setState({
+          notification: 'exception in adding likes',
+          notificationType : 'error'
+        })
+        setTimeout(() => {
+          this.setState({ notification: null,notificationType: null})
+        }, 5000)
+
+      }
+      /**blogService
         .update(id, changedBlog)
         .then(changedBlog => {
           const copiedBlogs = this.state.blogs.map(blog => blog.id !== id ? blog : changedBlog)
@@ -108,8 +139,7 @@ class App extends React.Component {
           })
         })
         .catch(error => {
-        })
-    }
+        })**/
   }
 
   compareLikes = (a, b) => {
@@ -190,7 +220,7 @@ class App extends React.Component {
         <div>
           <h2>blogs</h2>
             {this.state.blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} addLike={this.addLikesTo(blog.id)} />
+            <Blog key={blog.id} blog={blog} addLike={() => this.addLikesTo(blog.id)} />
             )}
         </div>
         </div>
