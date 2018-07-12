@@ -154,7 +154,7 @@ class App extends React.Component {
     try {
       await blogService.deleteBlog(id)
       this.setState({
-        blogs : this.state.blogs.filter(blog => blog.id != id),
+        blogs : this.state.blogs.filter(blog => blog.id !== id),
         notification: `removed blog ${blogToRemove.title}`,
         notificationType : 'success'
       })
