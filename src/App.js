@@ -129,6 +129,8 @@ class App extends React.Component {
         }, 5000)
 
       }
+
+      
       /**blogService
         .update(id, changedBlog)
         .then(changedBlog => {
@@ -140,6 +142,37 @@ class App extends React.Component {
         })
         .catch(error => {
         })**/
+  }
+
+  removeBlog = async (id) => {
+
+    if(window.confirm(`Do you want to remove ${this.state.blogs.find(n => n.id === id).title}`)) {
+    
+    const blog = this.state.blogs.find(n => n.id === id)
+    const blogToRemove = { ...blog}
+
+    try {
+      await blogService.deleteBlog(id)
+      this.setState({
+        blogs : this.state.blogs.filter(blog => blog.id != id),
+        notification: `removed blog ${blogToRemove.title}`,
+        notificationType : 'success'
+      })
+      setTimeout(() => {
+        this.setState({ notification: null,notificationType: null})
+      }, 5000)
+
+    } catch(exception) {
+      this.setState({
+        notification: 'exception in the removal of blog',
+        notificationType : 'error'
+      })
+      setTimeout(() => {
+        this.setState({ notification: null,notificationType: null})
+      }, 5000)
+
+      }
+    }
   }
 
   compareLikes = (a, b) => {
@@ -220,7 +253,8 @@ class App extends React.Component {
         <div>
           <h2>blogs</h2>
             {this.state.blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} addLike={() => this.addLikesTo(blog.id)} />
+            <Blog key={blog.id} blog={blog} 
+            addLike={() => this.addLikesTo(blog.id)} removeBlog={()=> this.removeBlog(blog.id)} />
             )}
         </div>
         </div>

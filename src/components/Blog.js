@@ -42,6 +42,9 @@ class Blog extends React.Component {
           <div>
             added by {this.props.blog.user.username}
           </div>
+          <div>
+            <button onClick={this.props.removeBlog}>delete</button>
+          </div>
         </div>
       </div>
     )
