@@ -11,13 +11,13 @@ class Blog extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: true
+      visible: false
     }
   }
 
   toggleVisibility = () => {
     this.setState({ visible: !this.state.visible })
-    console.log("Here")
+    //console.log("Here")
   }
 
   render() {
@@ -34,11 +34,11 @@ class Blog extends React.Component {
     }
 
     return (
-      <div style={blogStyle}>
-        <div onClick={this.toggleVisibility}>
+      <div style={blogStyle} className="content">
+        <div onClick={this.toggleVisibility} className="toggleHiddenButton">
           {this.props.blog.title} by {this.props.blog.author}
         </div>
-        <div style={toggleInfo}>
+        <div style={toggleInfo} className="contentHiddenAtStart">
           <div>
           <a href={this.props.blog.url}> {this.props.blog.url}</a>
           </div>
