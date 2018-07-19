@@ -253,7 +253,7 @@ class App extends React.Component {
         <div>
           <h2>blogs</h2>
             {this.state.blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} 
+            <Blog key={blog.id} blog={blog} username={this.state.user.username} 
             addLike={() => this.addLikesTo(blog.id)} removeBlog={()=> this.removeBlog(blog.id)} />
             )}
         </div>

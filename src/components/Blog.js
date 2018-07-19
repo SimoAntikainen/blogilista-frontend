@@ -24,6 +24,15 @@ class Blog extends React.Component {
     //const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
     const toggleInfo = { display: this.state.visible ? '' : 'none' }
 
+    const deleteVisible = () => {
+      if(this.props.blog.user === undefined) {
+        return <button onClick={this.props.removeBlog}>delete</button>    
+      }
+      if (this.props.blog.user.username === this.props.username) {
+        return <button onClick={this.props.removeBlog}>delete</button>
+      } 
+    }
+
 
     const blogStyle = {
       paddingTop: 5,
@@ -51,7 +60,7 @@ class Blog extends React.Component {
             {this.props.blog.user === undefined ? 'blog has no user' : `blog added by ${this.props.blog.user.username}`}
           </div>
           <div>
-            <button onClick={this.props.removeBlog}>delete</button>
+            {deleteVisible()}
           </div>
         </div>
       </div>
