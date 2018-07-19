@@ -24,6 +24,7 @@ class Blog extends React.Component {
     //const hideWhenVisible = { display: this.state.visible ? 'none' : '' }
     const toggleInfo = { display: this.state.visible ? '' : 'none' }
 
+
     const blogStyle = {
       paddingTop: 5,
       paddingLeft: 5,
@@ -47,7 +48,7 @@ class Blog extends React.Component {
             <button onClick={this.props.addLike}>like</button>
           </div>
           <div>
-            added by {this.props.blog.user.username}
+            {this.props.blog.user === undefined ? 'blog has no user' : `blog added by ${this.props.blog.user.username}`}
           </div>
           <div>
             <button onClick={this.props.removeBlog}>delete</button>
