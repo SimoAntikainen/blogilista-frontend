@@ -200,10 +200,10 @@ class App extends React.Component {
   render() {
 
     const loginForm = () => (
-      <div>
+      <div className="login">
         <h2>Log in</h2>
 
-        <form onSubmit={this.login}>
+        <form onSubmit={this.login} className="loginForm">
           <div>
             username
             <input
