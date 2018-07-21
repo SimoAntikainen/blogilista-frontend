@@ -1,8 +1,4 @@
-let token = null
-
-//name:"ccc ddd"
-//token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIyIiwiaWQiOiI1YjNjZWRiYzM3NmI4NDAzMjQwY2Q2ZWYiLCJpYXQiOjE1MzE0Mjk5Nzd9.v6BlkkGPzMcWc-YRLMbSfLWYkTD4j7jsNaFsNAwHe38"
-//username:"user2"
+let token = '1231231214'
 
 const blogs = [
   {
@@ -131,4 +127,8 @@ const getAll = () => {
   return Promise.resolve(blogs)
 }
 
-export default { getAll, blogs }
+const setToken = (newToken) => {
+  token = `bearer ${newToken}`
+}
+
+export default { getAll, blogs, setToken }

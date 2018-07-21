@@ -41,9 +41,11 @@ class App extends React.Component {
       const sortedBlogs = this.sortedByLikes(blogs)
       this.setState({blogs: sortedBlogs})
     })**/
+    console.log("HERRRRRRRRRR", this.state.blogs.length)
 
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
+      console.log("not here")
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user })
       blogService.setToken(user.token)
