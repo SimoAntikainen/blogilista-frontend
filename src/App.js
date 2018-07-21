@@ -86,7 +86,7 @@ class App extends React.Component {
       const blogCreated = await blogService.create(blogObject)
       console.log("blog created", blogCreated.user)
       this.setState({
-        blogs: this.state.blogs.concat(blogCreated),
+        blogs: this.sortedByLikes(this.state.blogs.concat(blogCreated)),
         title: '',
         author: '',
         url: '',
